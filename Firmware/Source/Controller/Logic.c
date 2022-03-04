@@ -23,12 +23,11 @@ volatile Int64U LOGIC_TestTime = 0;
 volatile Int16U RingBufferIndex = 0;
 
 // Arrays
-float RingBuffer_Current[MAF_BUFFER_LENGTH];
 float RingBuffer_Voltage[MAF_BUFFER_LENGTH];
 
 // Functions prototypes
 void LOGIC_CacheVariables();
-void LOGIC_SaveToRingBuffer(volatile MeasureSample* Sample);
+void LOGIC_SaveToRingBuffer(volatile float Voltage);
 float LOGIC_ExtractAveragedDatas(float* Buffer, Int16U BufferLength);
 void LOGIC_SaveRegulatorErr(float Error);
 void LOGIC_ClearVariables();
@@ -59,9 +58,8 @@ void LOGIC_CacheVariables()
 }
 //-----------------------------
 
-bool LOGIC_RegulatorCycle(float Voltage, Int16U *Problem)
+bool LOGIC_RegulatorCycle(float Voltage)
 {
-	static Int16U FollowingErrorCounter = 0;
 	float RegulatorError, Qp, RegulatorOut, ErrorX;
 
 	// Формирование линейно нарастающего фронта импульса напряжения
@@ -83,26 +81,10 @@ bool LOGIC_RegulatorCycle(float Voltage, Int16U *Problem)
 
 	if(ErrorX <= RegulatorAlowedError)
 	{
-		FollowingErrorCounter = 0;
-
 		if(ErrorX <= MeasureAlowedError)
 			DataTable[REG_MEASURE_ERR_FLAG] = true;
 		else
 			DataTable[REG_MEASURE_ERR_FLAG] = false;
-	}
-	else
-	{
-		if(!DataTable[REG_MUTE_FOLLOWING_ERR])
-		{
-			FollowingErrorCounter++;
-
-			if(FollowingErrorCounter >= DataTable[REG_FOLLOWING_ERR_CNT_NUM])
-			{
-				FollowingErrorCounter = 0;
-				*Problem = PROBLEM_FOLOWING_ERROR;
-				return true;
-			}
-		}
 	}
 
 	Qi += RegulatorError * RegulatorIcoef;
@@ -166,21 +148,9 @@ float LOGIC_GetAverageVoltage()
 }
 //-----------------------------
 
-float LOGIC_GetAverageCurrent()
-{
-	return LOGIC_ExtractAveragedDatas(&RingBuffer_Current[0], MAF_BUFFER_LENGTH);
-}
-//-----------------------------
-
 float LOGIC_GetLastSampledVoltage()
 {
 	return LOGIC_GetLastSampledData(&RingBuffer_Voltage[0]);
-}
-//-----------------------------
-
-float LOGIC_GetLastSampledCurrent()
-{
-	return LOGIC_GetLastSampledData(&RingBuffer_Current[0]);
 }
 //-----------------------------
 
@@ -206,17 +176,16 @@ float LOGIC_ExtractAveragedDatas(float* Buffer, Int16U BufferLength)
 }
 //-----------------------------
 
-void LOGIC_SaveToRingBuffer(volatile MeasureSample* Sample)
+void LOGIC_SaveToRingBuffer(volatile float Voltage)
 {
-	RingBuffer_Current[RingBufferIndex] = Sample->Current;
-	RingBuffer_Voltage[RingBufferIndex] = Sample->Voltage;
+	RingBuffer_Voltage[RingBufferIndex] = Voltage;
 
 	RingBufferIndex++;
 	RingBufferIndex &= MAF_BUFFER_INDEX_MASK;
 }
 //-----------------------------
 
-void LOGIC_LoggingProcess(volatile MeasureSample* Sample)
+void LOGIC_LoggingProcess(volatile float Voltage)
 {
 	static Int16U ScopeLogStep = 0, LocalCounter = 0;
 
@@ -226,27 +195,13 @@ void LOGIC_LoggingProcess(volatile MeasureSample* Sample)
 
 	if (ScopeLogStep++ >= DataTable[REG_SCOPE_STEP])
 	{
+		CONTROL_ValuesVoltage[LocalCounter] = (Int16U)(Voltage * 10);
+
 		ScopeLogStep = 0;
-
-		CONTROL_ValuesVoltage[LocalCounter] = (Int16U)(Sample->Voltage * 10);
-
-		switch(DISOPAMP_GetCurrentRange())
-		{
-			case CURRENT_RANGE0:
-			case CURRENT_RANGE1:
-				CONTROL_ValuesCurrent[LocalCounter] = (Int16U)(Sample->Current * 100);
-				break;
-
-			case CURRENT_RANGE2:
-			case CURRENT_RANGE3:
-				CONTROL_ValuesCurrent[LocalCounter] = (Int16U)(Sample->Current);
-				break;
-		}
-
 		++LocalCounter;
 	}
 
-	LOGIC_SaveToRingBuffer(Sample);
+	LOGIC_SaveToRingBuffer(Voltage);
 
 	// Условие обновления глобального счётчика данных
 	if (CONTROL_Values_Counter < VALUES_x_SIZE)
@@ -268,10 +223,7 @@ void LOGIC_StopProcess()
 void LOGIC_ClearVariables()
 {
 	for(int i = 0; i < MAF_BUFFER_LENGTH; i++)
-	{
-		RingBuffer_Current[i] = 0;
 		RingBuffer_Voltage[i] = 0;
-	}
 
 	RingBufferIndex = 0;
 	Qi = 0;
@@ -289,20 +241,5 @@ void LOGIC_SetCurrentRange()
 		DISOPAMP_SetCurrentCutOff(CurrentCutOff);
 	else
 		DISOPAMP_SetCurrentCutOff(DISOPAMP_CURRENT_THRESHOLD_RANGE_3);
-}
-//-----------------------------
-
-bool LOGIC_CheckExcessCurrentCutOff(float Current)
-{
-	if(!DataTable[REG_MUTE_EXCESS_CURRENT])
-	{
-		if(!DataTable[REG_TARGET_VOLTAGE_FLAG] && (Current >= DISOPAMP_CURRENT_THRESHOLD_RANGE_3))
-			return true;
-
-		if(DataTable[REG_TARGET_VOLTAGE_FLAG] && (Current >= CurrentCutOff))
-			return true;
-	}
-
-	return false;
 }
 //-----------------------------

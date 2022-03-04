@@ -29,12 +29,10 @@ volatile Int64U	CONTROL_AfterPulsePause = 0;
 volatile Int16U CONTROL_Values_Counter = 0;
 volatile Int16U CONTROL_RegulatorErr_Counter = 0;
 volatile Int16U CONTROL_ValuesVoltage[VALUES_x_SIZE];
-volatile Int16U CONTROL_ValuesCurrent[VALUES_x_SIZE];
 volatile Int16U CONTROL_RegulatorErr[VALUES_x_SIZE];
 //
-volatile MeasureSample SampleParams;
 
-/// Forward functions
+// Forward functions
 //
 static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError);
 void CONTROL_SetDeviceState(DeviceState NewState, DeviceSubState NewSubState);
@@ -46,7 +44,7 @@ void CONTROL_LogicProcess();
 void CONTROL_StopProcess();
 void CONTROL_StartProcess();
 void CONTROL_ResetOutputRegisters();
-void CONTROL_SaveTestResult(bool ExcessCurrent, Int16U Problem);
+void CONTROL_SaveTestResult();
 void CONTROL_ClearTestResult();
 
 // Functions
@@ -54,10 +52,10 @@ void CONTROL_ClearTestResult();
 void CONTROL_Init()
 {
 	// Переменные для конфигурации EndPoint
-	Int16U EPIndexes[EP_COUNT] = {EP_VOLTAGE, EP_CURRENT, EP_REGULATOR_ERR};
-	Int16U EPSized[EP_COUNT] = {VALUES_x_SIZE, VALUES_x_SIZE, VALUES_x_SIZE};
-	pInt16U EPCounters[EP_COUNT] = {(pInt16U)&CONTROL_Values_Counter, (pInt16U)&CONTROL_Values_Counter, (pInt16U)&CONTROL_RegulatorErr_Counter};
-	pInt16U EPDatas[EP_COUNT] = {(pInt16U)CONTROL_ValuesVoltage, (pInt16U)CONTROL_ValuesCurrent, (pInt16U)CONTROL_RegulatorErr};
+	Int16U EPIndexes[EP_COUNT] = {EP_VOLTAGE, EP_REGULATOR_ERR};
+	Int16U EPSized[EP_COUNT] = {VALUES_x_SIZE, VALUES_x_SIZE};
+	pInt16U EPCounters[EP_COUNT] = {(pInt16U)&CONTROL_Values_Counter, (pInt16U)&CONTROL_RegulatorErr_Counter};
+	pInt16U EPDatas[EP_COUNT] = {(pInt16U)CONTROL_ValuesVoltage, (pInt16U)CONTROL_RegulatorErr};
 
 	// Конфигурация сервиса работы Data-table и EPROM
 	EPROMServiceConfig EPROMService = {(FUNC_EPROM_WriteValues)&NFLASH_WriteDT, (FUNC_EPROM_ReadValues)&NFLASH_ReadDT};
@@ -80,11 +78,9 @@ void CONTROL_ResetOutputRegisters()
 	DataTable[REG_WARNING] = WARNING_NONE;
 	DataTable[REG_PROBLEM] = PROBLEM_NONE;
 	DataTable[REG_OP_RESULT] = OPRESULT_NONE;
-	
+	//
 	DataTable[REG_RESULT_VOLTAGE] = 0;
-	DataTable[REG_RESULT_CURRENT_H] = 0;
-	DataTable[REG_RESULT_CURRENT_L] = 0;
-
+	//
 	DEVPROFILE_ResetScopes(0);
 	DEVPROFILE_ResetEPReadState();
 }
@@ -136,17 +132,17 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			{
 				CONTROL_ResetOutputRegisters();
 				LOGIC_StartPrepare();
-				CONTROL_SetDeviceState(DS_InProcess, SS_PowerPrepare);
+				CONTROL_SetDeviceState(DS_InProcess, SS_WaitAfterPulse);
 			}
 			else
-				if (CONTROL_State == DS_InProcess || CONTROL_State == DS_InProcessExt)
+				if (CONTROL_State == DS_InProcess)
 					*pUserError = ERR_OPERATION_BLOCKED;
 				else
 					*pUserError = ERR_DEVICE_NOT_READY;
 			break;
 
 		case ACT_STOP_PROCESS:
-			if (CONTROL_State == DS_InProcess || CONTROL_State == DS_InProcessExt)
+			if (CONTROL_State == DS_InProcess)
 			{
 				LOGIC_StopProcess();
 				CONTROL_SetDeviceState(DS_Ready, SS_None);
@@ -175,43 +171,13 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 
 void CONTROL_LogicProcess()
 {
-	static Int64U DelayCounter = 0;
-
-	if(CONTROL_State == DS_InProcess || CONTROL_State == DS_InProcessExt)
+	if(CONTROL_State == DS_InProcess)
 	{
 		switch(CONTROL_SubState)
 		{
-			case SS_PowerPrepare:
-				CONTROL_SetDeviceState(DS_InProcess, SS_WaitAfterPulse);
-				break;
-
 			case SS_WaitAfterPulse:
 				if(CONTROL_TimeCounter > CONTROL_AfterPulsePause)
-				{
-					DelayCounter = CONTROL_TimeCounter + DataTable[REG_PS_ACTIVITY_TIME];
-					CONTROL_SetDeviceState(DS_InProcess, SS_ChargeHVPowerSupply);
-				}
-				break;
-
-			case SS_ChargeHVPowerSupply:
-				if(CONTROL_TimeCounter > DelayCounter)
-				{
-					DelayCounter = CONTROL_TimeCounter + DataTable[REG_START_DELAY];
-					CONTROL_SetDeviceState(DS_InProcess, SS_PrePulseDelay);
-				}
-				break;
-
-			case SS_PrePulseDelay:
-				if(CONTROL_TimeCounter > DelayCounter)
-				{
-					DelayCounter = CONTROL_TimeCounter + DataTable[REG_POST_CHARGE_WAIT_TIME];
-					CONTROL_SetDeviceState(DS_InProcessExt, SS_WaitSecondStart);
-				}
-				break;
-
-			case SS_WaitSecondStart:
-				if(CONTROL_TimeCounter > DelayCounter)
-					CONTROL_SetDeviceState(DS_Ready, SS_None);
+					CONTROL_SetDeviceState(DS_InProcess, SS_ExecutePulse);
 				break;
 
 			case SS_ExecutePulse:
@@ -228,24 +194,17 @@ void CONTROL_LogicProcess()
 
 void CONTROL_HighPriorityProcess()
 {
-	Int16U Problem;
-	bool ExcessCurrent, RegulatorWasFinishedProcess;
+	volatile float Voltage;
 
 	if(CONTROL_SubState == SS_Pulse)
 	{
-		MEASURE_SampleParams(&SampleParams);
+		Voltage = MEASURE_SampleVoltage();
+		LOGIC_LoggingProcess(Voltage);
 
-		LOGIC_LoggingProcess(&SampleParams);
-
-		ExcessCurrent = LOGIC_CheckExcessCurrentCutOff(SampleParams.Current);
-
-		if(!ExcessCurrent)
-			RegulatorWasFinishedProcess = LOGIC_RegulatorCycle(SampleParams.Voltage, &Problem);
-
-		if(RegulatorWasFinishedProcess || ExcessCurrent)
+		if(LOGIC_RegulatorCycle(Voltage))
 		{
 			CONTROL_StopProcess();
-			CONTROL_SaveTestResult(ExcessCurrent, Problem);
+			CONTROL_SaveTestResult();
 		}
 	}
 }
@@ -267,45 +226,16 @@ void CONTROL_StopProcess()
 }
 //-----------------------------------------------
 
-void CONTROL_SaveTestResult(bool ExcessCurrent, Int16U Problem)
+void CONTROL_SaveTestResult()
 {
-	Int32U Current;
-
-	if(Problem == PROBLEM_FOLOWING_ERROR)
-	{
-		DataTable[REG_OP_RESULT] = OPRESULT_FAIL;
-		DataTable[REG_PROBLEM] = PROBLEM_FOLOWING_ERROR;
-		CONTROL_ClearTestResult();
-	}
-	else
-	{
-		DataTable[REG_OP_RESULT] = OPRESULT_OK;
-
-		if(ExcessCurrent)
-		{
-			DataTable[REG_WARNING] = WARNING_CURRENT_CUTOFF;
-
-			Current = (Int32U)(LOGIC_GetLastSampledCurrent() * 100);
-			DataTable[REG_RESULT_CURRENT_H] = (Int16U)(Current >> 16);
-			DataTable[REG_RESULT_CURRENT_L] = (Int16U)Current;
-			DataTable[REG_RESULT_VOLTAGE] = (Int16U)(LOGIC_GetLastSampledVoltage() * 10);
-		}
-		else
-		{
-			Current = (Int32U)(LOGIC_GetAverageCurrent() * 100);
-			DataTable[REG_RESULT_CURRENT_H] = (Int16U)(Current >> 16);
-			DataTable[REG_RESULT_CURRENT_L] = (Int16U)Current;
-			DataTable[REG_RESULT_VOLTAGE] = (Int16U)(LOGIC_GetAverageVoltage() * 10);
-		}
-	}
+	DataTable[REG_RESULT_VOLTAGE] = (Int16U)(LOGIC_GetAverageVoltage() * 10);
+	DataTable[REG_OP_RESULT] = OPRESULT_OK;
 }
 //-----------------------------------------------
 
 void CONTROL_ClearTestResult()
 {
 	DataTable[REG_RESULT_VOLTAGE] = 0;
-	DataTable[REG_RESULT_CURRENT_H] = 0;
-	DataTable[REG_RESULT_CURRENT_L] = 0;
 }
 //-----------------------------------------------
 

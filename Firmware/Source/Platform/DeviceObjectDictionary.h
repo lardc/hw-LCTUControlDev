@@ -24,65 +24,31 @@
 
 // Регистры
 // Сохраняемые регистры
-#define REG_PS_ACTIVITY_TIME			0	// Время работы блоков питания для заряда конденсаторов (мс)
-#define REG_PULSE_WIDTH					1	// Длительность импульса (мс)
-#define REG_PULSE_FRONT_WIDTH			2	// Длительность фронта импульса в (мс)
-#define REG_REGULATOR_ALOWED_ERR		3	// Допустимая ошибка регулирования (% * 10)
-#define REG_START_DELAY					4	// Задержка начала измерения после выключения заряда конденсаторов
-#define REG_FOLLOWING_ERR_CNT_NUM		5	// Значение счетчика FollowingError, при котором выставляется ошибка DF_FOLLOWING_ERR
-#define REG_SCOPE_STEP					6	// Сохранение измеренных данных с заданным шагом
-#define REG_AFTER_PULSE_PAUSE			7	// Время выдержки перед началом следующего измерения (мс)
-#define REG_REGULATOR_QI_MAX			8	// Максимально допустимое значение Qi регулятора
-#define REG_MEASURE_ALLOWED_ERR			9	// Допустимая ошибка при измерении (% * 10)
-#define REG_MUTE_FOLLOWING_ERR			10	// Выключить слежение за ошибкой DF_FOLOWING_ERROR
-#define REG_MUTE_EXCESS_CURRENT			11	// Выключение слежение за отсечкой по току
-#define REG_POST_CHARGE_WAIT_TIME		12	// Время ожидания импульса запуска после окончания заряда (мс)
-// 13 - 19
-#define REG_DAC_V_CELL_K				20	// Коэффициент грубой подстройки К
-#define REG_DAC_V_CELL_B				21	// Смещение грубой подстройки B
-// 21 - 41
-#define REG_ADC_V_RANGE0_P2				41	// Диапазон 0 - Коэффициент тонкой подстройки Р2 х1е6
-#define REG_ADC_V_RANGE0_P1				42	// Диапазон 0 - Коэффициент тонкой подстройки Р1 х1000
-#define REG_ADC_V_RANGE0_P0				43	// Диапазон 0 - Смещение тонкой подстройки Р0
-#define REG_ADC_V_RANGE0_K				44	// Диапазон 0 - Коэффициент грубой подстройки K
-#define REG_ADC_V_RANGE0_B				45	// Диапазон 0 - Смещение грубой подстройки B
+#define REG_PULSE_WIDTH					0	// Длительность импульса (мс)
+#define REG_PULSE_FRONT_WIDTH			1	// Длительность фронта импульса в (мс)
+#define REG_REGULATOR_ALOWED_ERR		2	// Допустимая ошибка регулирования (% * 10)
+#define REG_SCOPE_STEP					3	// Сохранение измеренных данных с заданным шагом
+#define REG_AFTER_PULSE_PAUSE			4	// Время выдержки перед началом следующего измерения (мс)
+#define REG_REGULATOR_QI_MAX			5	// Максимально допустимое значение Qi регулятора
+#define REG_MEASURE_ALLOWED_ERR			6	// Допустимая ошибка при измерении (% * 10)
 //
-#define REG_ADC_V_RANGE1_P2				46	// Диапазон 1 - Коэффициент тонкой подстройки Р2 х1е6
-#define REG_ADC_V_RANGE1_P1				47	// Диапазон 1 - Коэффициент тонкой подстройки Р1 х1000
-#define REG_ADC_V_RANGE1_P0				48	// Диапазон 1 - Смещение тонкой подстройки Р0
-#define REG_ADC_V_RANGE1_K				49	// Диапазон 1 - Коэффициент грубой подстройки K
-#define REG_ADC_V_RANGE1_B				50	// Диапазон 1 - Смещение грубой подстройки B
+#define REG_DAC_V_CELL_K				10	// Коэффициент грубой подстройки К
+#define REG_DAC_V_CELL_B				11	// Смещение грубой подстройки B
 //
-#define REG_ADC_I_RANGE0_P2				51	// Диапазон 0 - Коэффициент тонкой подстройки Р2 х1е6
-#define REG_ADC_I_RANGE0_P1				52	// Диапазон 0 - Коэффициент тонкой подстройки Р1 x1000
-#define REG_ADC_I_RANGE0_P0				53	// Диапазон 0 - Смещение тонкой подстройки Р0
-#define REG_ADC_I_RANGE0_N				54	// Диапазон 0 - Числитель коэффициента грубой подстройки
-#define REG_ADC_I_RANGE0_D				55	// Диапазон 0 - Знаменатель коэффициента грубой подстройки
-#define REG_ADC_I_RANGE0_B				56	// Диапазон 0 - Смещение тонкой подстройки B
+#define REG_ADC_V_RANGE0_P2				12	// Диапазон 0 - Коэффициент тонкой подстройки Р2 х1е6
+#define REG_ADC_V_RANGE0_P1				13	// Диапазон 0 - Коэффициент тонкой подстройки Р1 х1000
+#define REG_ADC_V_RANGE0_P0				14	// Диапазон 0 - Смещение тонкой подстройки Р0
+#define REG_ADC_V_RANGE0_K				15	// Диапазон 0 - Коэффициент грубой подстройки K
+#define REG_ADC_V_RANGE0_B				16	// Диапазон 0 - Смещение грубой подстройки B
 //
-#define REG_ADC_I_RANGE1_P2				57	// Диапазон 1 - Коэффициент тонкой подстройки Р2 х1е6
-#define REG_ADC_I_RANGE1_P1				58	// Диапазон 1 - Коэффициент тонкой подстройки Р1 x1000
-#define REG_ADC_I_RANGE1_P0				59	// Диапазон 1 - Смещение тонкой подстройки Р0
-#define REG_ADC_I_RANGE1_N				60	// Диапазон 1 - Числитель коэффициента грубой подстройки
-#define REG_ADC_I_RANGE1_D				61	// Диапазон 1 - Знаменатель коэффициента грубой подстройки
-#define REG_ADC_I_RANGE1_B				62	// Диапазон 1 - Смещение тонкой подстройки B
+#define REG_ADC_V_RANGE1_P2				17	// Диапазон 1 - Коэффициент тонкой подстройки Р2 х1е6
+#define REG_ADC_V_RANGE1_P1				18	// Диапазон 1 - Коэффициент тонкой подстройки Р1 х1000
+#define REG_ADC_V_RANGE1_P0				19	// Диапазон 1 - Смещение тонкой подстройки Р0
+#define REG_ADC_V_RANGE1_K				20	// Диапазон 1 - Коэффициент грубой подстройки K
+#define REG_ADC_V_RANGE1_B				21	// Диапазон 1 - Смещение грубой подстройки B
 //
-#define REG_ADC_I_RANGE2_P2				63	// Диапазон 2 - Коэффициент тонкой подстройки Р2 х1е6
-#define REG_ADC_I_RANGE2_P1				64	// Диапазон 2 - Коэффициент тонкой подстройки Р1 x1000
-#define REG_ADC_I_RANGE2_P0				65	// Диапазон 2 - Смещение тонкой подстройки Р0
-#define REG_ADC_I_RANGE2_N				66	// Диапазон 2 - Числитель коэффициента грубой подстройки
-#define REG_ADC_I_RANGE2_D				67	// Диапазон 2 - Знаменатель коэффициента грубой подстройки
-#define REG_ADC_I_RANGE2_B				68	// Диапазон 2 - Смещение тонкой подстройки B
-//
-#define REG_ADC_I_RANGE3_P2				69	// Диапазон 3 - Коэффициент тонкой подстройки Р2 х1е6
-#define REG_ADC_I_RANGE3_P1				70	// Диапазон 3 - Коэффициент тонкой подстройки Р1 x1000
-#define REG_ADC_I_RANGE3_P0				71	// Диапазон 3 - Смещение тонкой подстройки Р0
-#define REG_ADC_I_RANGE3_N				72	// Диапазон 3 - Числитель коэффициента грубой подстройки
-#define REG_ADC_I_RANGE3_D				73	// Диапазон 3 - Знаменатель коэффициента грубой подстройки
-#define REG_ADC_I_RANGE3_B				74	// Диапазон 3 - Смещение тонкой подстройки B
-//
-#define REG_REGULATOR_Kp				80	// Пропорциональный коэффициент регулятора
-#define REG_REGULATOR_Ki				81	// Интегральный коэффициент регулятора
+#define REG_REGULATOR_Kp				22	// Пропорциональный коэффициент регулятора
+#define REG_REGULATOR_Ki				23	// Интегральный коэффициент регулятора
 
 #define REG_VOLTAGE_SETPOINT			128	// Уставка по напряжению, В х 10
 #define REG_CURRENT_CUTOFF_L			129	// Ограничение по току (старшая часть), мкА х 10
@@ -102,8 +68,6 @@
 #define REG_SUB_STATE					198	// Регистр вспомогательного состояния
 
 #define REG_RESULT_VOLTAGE				200	// Достигнутое напряжение во время теста (В * 10)
-#define REG_RESULT_CURRENT_L			201	// Измеренный ток (старшая часть), при заданном напряжении (мкА * 10)
-#define REG_RESULT_CURRENT_H			202	// Измеренный ток (младшая часть), при заданном напряжении (мкА * 10)
 //
 #define REG_MEASURE_ERR_FLAG			205	// Флаг, выставляемый при достижении ошибки регулирования заданного значения
 #define REG_TARGET_VOLTAGE_FLAG			206	// Флаг выхода напряжения на уставку
@@ -140,7 +104,6 @@
 
 // Endpoints
 #define EP_VOLTAGE						1
-#define EP_CURRENT						2
-#define EP_REGULATOR_ERR				3
+#define EP_REGULATOR_ERR				2
 
 #endif //  __DEV_OBJ_DIC_H
