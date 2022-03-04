@@ -93,10 +93,6 @@ void CONTROL_ResetOutputRegisters()
 void CONTROL_ResetToDefaultState()
 {
 	CONTROL_ResetOutputRegisters();
-	
-	LL_SetStateExtMsrLed(false);
-	LL_PowerSupplyEnable(false);
-
 	DISOPAMP_SetVoltage(0);
 
 	CONTROL_SetDeviceState(DS_None, SS_None);
@@ -193,14 +189,12 @@ void CONTROL_LogicProcess()
 		switch(CONTROL_SubState)
 		{
 			case SS_PowerPrepare:
-				LL_SetStateExtMsrLed(true);
 				CONTROL_SetDeviceState(DS_InProcess, SS_WaitAfterPulse);
 				break;
 
 			case SS_WaitAfterPulse:
 				if(CONTROL_TimeCounter > CONTROL_AfterPulsePause)
 				{
-					LL_PowerSupplyEnable(true);
 					DelayCounter = CONTROL_TimeCounter + DataTable[REG_PS_ACTIVITY_TIME];
 					CONTROL_SetDeviceState(DS_InProcess, SS_ChargeHVPowerSupply);
 				}
@@ -209,7 +203,6 @@ void CONTROL_LogicProcess()
 			case SS_ChargeHVPowerSupply:
 				if(CONTROL_TimeCounter > DelayCounter)
 				{
-					LL_PowerSupplyEnable(false);
 					DelayCounter = CONTROL_TimeCounter + DataTable[REG_START_DELAY];
 					CONTROL_SetDeviceState(DS_InProcess, SS_PrePulseDelay);
 				}
@@ -268,7 +261,6 @@ void CONTROL_HighPriorityProcess()
 void CONTROL_StartProcess()
 {
 	MEASURE_DMABuffersClear();
-	LL_SetStateLineSync2(true);
 	TIM_Start(TIM6);
 }
 //-----------------------------------------------
@@ -276,10 +268,6 @@ void CONTROL_StartProcess()
 void CONTROL_StopProcess()
 {
 	LOGIC_StopProcess();
-
-	LL_SetStateLineSync2(false);
-	LL_SetStateExtMsrLed(false);
-
 	CONTROL_AfterPulsePause = CONTROL_TimeCounter + DataTable[REG_AFTER_PULSE_PAUSE];
 
 	CONTROL_SetDeviceState(DS_Ready, SS_None);

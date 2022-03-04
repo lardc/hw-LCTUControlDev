@@ -41,7 +41,6 @@ void LOGIC_StartPrepare()
 	LOGIC_CacheVariables();
 	CU_LoadConvertParams();
 	LOGIC_SetCurrentRange();
-	MEASURE_SetVoltageRange(VoltageSetpoint);
 }
 //-----------------------------
 
@@ -261,7 +260,6 @@ void LOGIC_LoggingProcess(volatile MeasureSample* Sample)
 
 void LOGIC_StopProcess()
 {
-	LL_PowerSupplyEnable(false);
 	TIM_Stop(TIM6);
 	DISOPAMP_SetVoltage(0);
 }
