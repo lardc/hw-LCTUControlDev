@@ -81,15 +81,4 @@ void MEASURE_StartNewSampling()
 }
 //-----------------------------------------------
 
-void MEASURE_SetVoltageRange(float Voltage)
-{
-	if(Voltage <= MEASURE_VOLTAGE_RANGE_THRESHOLD)
-		MEASURE_VoltageRange = MEASURE_VOLTAGE_RANGE_0;
-	else
-		MEASURE_VoltageRange = MEASURE_VOLTAGE_RANGE_1;
-
-	LL_SetVoltageRange(MEASURE_VoltageRange);
-}
-//-----------------------------------------------
-
 

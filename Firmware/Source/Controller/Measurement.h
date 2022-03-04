@@ -28,6 +28,5 @@ float MEASURE_SampleVoltage();
 float MEASURE_SampleCurrent();
 void MEASURE_SampleParams(volatile MeasureSample* Sample);
 void MEASURE_DMABuffersClear();
-void MEASURE_SetVoltageRange(float Voltage);
 
 #endif /* MEASUREMENT_H_ */
