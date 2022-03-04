@@ -38,32 +38,7 @@ void DISOPAMP_SetCurrentCutOff(float Current)
 
 void DISOPAMP_SetVoltage(float Voltage)
 {
-	Int16U CellCounter = 0;
-
-	if(Voltage)
-	{
-		while(Voltage >= DISOPAMP_CELL_VOLATGE_MAX)
-		{
-			Voltage -= DISOPAMP_CELL_VOLATGE_MAX;
-			CellCounter++;
-		}
-
-		if(!CellCounter)
-			LL_WriteDACx(CU_VtoDAC(Voltage) | DAC_CHANNEL_B, DISOPAMP_POSITION_CELL0, 1, false);
-		else
-		{
-			LL_WriteDACx(CU_VtoDAC(DISOPAMP_CELL_VOLATGE_MAX) | DAC_CHANNEL_B, DISOPAMP_POSITION_CELL0, CellCounter, false);
-			LL_WriteDACx(CU_VtoDAC(Voltage) | DAC_CHANNEL_B, DISOPAMP_POSITION_CELL0 + CellCounter, 1, false);
-		}
-
-		if(DISOPAMP_TOTAL_CELL - CellCounter - 1)
-			LL_WriteDACx(DAC_CHANNEL_B, DISOPAMP_POSITION_CELL1 + CellCounter, DISOPAMP_TOTAL_CELL - CellCounter - 1, false);
-
-	}
-	else
-		LL_WriteDACx(DAC_CHANNEL_B, DISOPAMP_POSITION_CELL0, DISOPAMP_TOTAL_CELL, false);
-
-	LL_ToggleLDAC();
+	LL_WriteDACx(CU_VtoDAC(DISOPAMP_CELL_VOLATGE_MAX) | DAC_CHANNEL_B);
 }
 //-----------------------------
 
