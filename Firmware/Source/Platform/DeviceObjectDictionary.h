@@ -7,15 +7,10 @@
 #define ACT_CLR_FAULT					3	// Очистка всех fault
 #define ACT_CLR_WARNING					4	// Очистка всех warning
 
-#define ACT_DBG_PULSE_SYNC1				50	// Одиночный импусль в линию SYNC_1
-#define ACT_DBG_PULSE_SYNC2				51	// Одиночный импусль в линию SYNC_2
-#define ACT_DBG_IS_STATE_SYNC_1			52	// Состояние линии SYNC_1
-#define ACT_DBG_IS_STATE_SYNC_2			53	// Состояние линии SYNC_2
-#define ACT_DBG_PULSE_EXT_LEDS			54	// Однократное зажигание внешних светодиодов
-#define ACT_DBG_SET_CURRENT_RANGE		55	// Установка диапазона по току (0, 1, 2)
-#define ACT_DBG_POWER_SUPPLY_EN			56	// Проверка активности источников питания на 500В
-#define ACT_DBG_SET_CURRENT_CUTOFF		57	// Установка отсечки по току на всех ячейках DiscreteOpAmp
-#define ACT_DBG_SET_VOLTAGE_CELL		58	// Установка напряжения на заданной ячейке
+#define ACT_DBG_PULSE_SYNC				50	// Одиночный импульс в линию SYNC
+#define ACT_DBG_SET_CURRENT_RANGE		51	// Установка диапазона по току (0, 1, 2)
+#define ACT_DBG_SET_CURRENT_CUTOFF		52	// Установка отсечки по току на всех ячейках DiscreteOpAmp
+#define ACT_DBG_SET_VOLTAGE				53	// Установка напряжения
 
 #define ACT_START_PROCESS				100	// Старт измерения
 #define ACT_STOP_PROCESS				101	// Стоп измерения
