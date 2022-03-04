@@ -153,13 +153,6 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			}
 			break;
 
-		case ACT_SECOND_START_PROCESS:
-			if (CONTROL_State == DS_InProcessExt)
-				CONTROL_SetDeviceState(DS_InProcess, SS_ExecutePulse);
-			else
-				*pUserError = ERR_OPERATION_BLOCKED;
-			break;
-
 		case ACT_CLR_FAULT:
 			if (CONTROL_State == DS_Fault)
 			{
