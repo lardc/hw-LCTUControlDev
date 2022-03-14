@@ -194,7 +194,7 @@ void CONTROL_LogicProcess()
 
 void CONTROL_HighPriorityProcess()
 {
-	volatile float Voltage;
+	float Voltage;
 
 	if(CONTROL_SubState == SS_Pulse)
 	{

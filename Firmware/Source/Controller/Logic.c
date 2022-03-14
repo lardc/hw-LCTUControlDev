@@ -27,7 +27,7 @@ float RingBuffer_Voltage[MAF_BUFFER_LENGTH];
 
 // Functions prototypes
 void LOGIC_CacheVariables();
-void LOGIC_SaveToRingBuffer(volatile float Voltage);
+void LOGIC_SaveToRingBuffer(float Voltage);
 float LOGIC_ExtractAveragedDatas(float* Buffer, Int16U BufferLength);
 void LOGIC_SaveRegulatorErr(float Error);
 void LOGIC_ClearVariables();
@@ -176,7 +176,7 @@ float LOGIC_ExtractAveragedDatas(float* Buffer, Int16U BufferLength)
 }
 //-----------------------------
 
-void LOGIC_SaveToRingBuffer(volatile float Voltage)
+void LOGIC_SaveToRingBuffer(float Voltage)
 {
 	RingBuffer_Voltage[RingBufferIndex] = Voltage;
 
@@ -185,7 +185,7 @@ void LOGIC_SaveToRingBuffer(volatile float Voltage)
 }
 //-----------------------------
 
-void LOGIC_LoggingProcess(volatile float Voltage)
+void LOGIC_LoggingProcess(float Voltage)
 {
 	static Int16U ScopeLogStep = 0, LocalCounter = 0;
 
