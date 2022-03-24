@@ -28,7 +28,7 @@ GPIO_PortPinSettingMacro GPIO_SYNC				= {GPIOC, Pin_13};
 // Определения для портов альтернативных функций
 GPIO_PortPinSettingMacro GPIO_ALT_UART1_TX		= {GPIOA, Pin_9};
 GPIO_PortPinSettingMacro GPIO_ALT_UART1_RX		= {GPIOA, Pin_10};
-GPIO_PortPinSettingMacro GPIO_ALT_SPI1_CLK		= {GPIOB, Pin_13};
-GPIO_PortPinSettingMacro GPIO_ALT_SPI1_DAT		= {GPIOB, Pin_15};
+GPIO_PortPinSettingMacro GPIO_ALT_SPI2_CLK		= {GPIOB, Pin_13};
+GPIO_PortPinSettingMacro GPIO_ALT_SPI2_DAT		= {GPIOB, Pin_15};
 
 #endif // __BOARD_H

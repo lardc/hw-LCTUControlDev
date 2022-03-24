@@ -17,6 +17,7 @@ void INITCFG_ConfigIO()
 	// Включение тактирования портов
 	RCC_GPIO_Clk_EN(PORTA);
 	RCC_GPIO_Clk_EN(PORTB);
+	RCC_GPIO_Clk_EN(PORTC);
 	
 	// Выходы
 	GPIO_InitPushPullOutput(GPIO_LED);
@@ -39,8 +40,8 @@ void INITCFG_ConfigIO()
 	// Альтернативные функции
 	GPIO_InitAltFunction(GPIO_ALT_UART1_RX, AltFn_7);
 	GPIO_InitAltFunction(GPIO_ALT_UART1_TX, AltFn_7);
-	GPIO_InitAltFunction(GPIO_ALT_SPI1_CLK, AltFn_5);
-	GPIO_InitAltFunction(GPIO_ALT_SPI1_DAT, AltFn_5);
+	GPIO_InitAltFunction(GPIO_ALT_SPI2_CLK, AltFn_5);
+	GPIO_InitAltFunction(GPIO_ALT_SPI2_DAT, AltFn_5);
 }
 
 //------------------------------------------------
@@ -111,7 +112,7 @@ void INITCFG_ConfigDMA()
 
 void INITCFG_ConfigSPI()
 {
-	SPI_Init(SPI1, SPI1_BAUDRATE_BITS, SPI1_LSB_FIRST);
-	SPI_InvertClockPolarity(SPI1, true);
+	SPI_Init(SPI2, SPI2_BAUDRATE_BITS, SPI2_LSB_FIRST);
+	SPI_InvertClockPolarity(SPI2, true);
 }
 //------------------------------------------------

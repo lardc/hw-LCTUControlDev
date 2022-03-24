@@ -54,7 +54,7 @@ void LL_SetCurrentRange3()
 void LL_WriteDACx(Int16U Data)
 {
 	GPIO_SetState(GPIO_OPAMP_SYNC, false);
-	SPI_WriteByte(SPI1, Data);
+	SPI_WriteByte(SPI2, Data);
 	GPIO_SetState(GPIO_OPAMP_SYNC, true);
 
 	LL_ToggleLDAC();
