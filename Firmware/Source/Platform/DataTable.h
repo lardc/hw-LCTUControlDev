@@ -11,6 +11,9 @@
 #include "DeviceObjectDictionary.h"
 #include "DeviceProfile.h"
 
+// Definitions
+#define USE_FLOAT_DT
+
 // Constants
 //
 #define DATA_TABLE_SIZE			300
@@ -39,6 +42,13 @@
 
 // Types
 //
+#ifdef USE_FLOAT_DT
+typedef float	DType;
+typedef float*	pDType;
+#else
+typedef Int16U	DType;
+typedef pInt16U	pDType;
+#endif
 typedef void (*FUNC_SetDefaultValues)();
 typedef void (*FUNC_EPROM_WriteValues)(Int32U EPROMAddress, pInt16U Buffer, Int16U BufferSize);
 typedef void (*FUNC_EPROM_ReadValues)(Int32U EPROMAddress, pInt16U Buffer, Int16U BufferSize);
@@ -51,7 +61,7 @@ typedef struct __EPROMServiceConfig
 
 // Variables
 //
-extern volatile Int16U DataTable[DATA_TABLE_SIZE];
+extern volatile DType DataTable[];
 
 // Functions
 //

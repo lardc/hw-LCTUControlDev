@@ -50,6 +50,7 @@ static Boolean* MaskChangesFlag;
 // Forward functions
 //
 static Boolean DEVPROFILE_Validate16(Int16U Address, Int16U Data);
+static Boolean DEVPROFILE_ValidateFloat(Int16U Address, float Data);
 static Boolean DEVPROFILE_DispatchAction(Int16U ActionID, pInt16U UserError);
 static void DEVPROFILE_FillWRPartDefault();
 
@@ -75,6 +76,7 @@ void DEVPROFILE_Init(xCCI_FUNC_CallbackAction SpecializedDispatch, Boolean* Mask
 	// Init service
 	X_ServiceConfig.UserActionCallback = &DEVPROFILE_DispatchAction;
 	X_ServiceConfig.ValidateCallback16 = &DEVPROFILE_Validate16;
+	X_ServiceConfig.ValidateCallbackFloat = &DEVPROFILE_ValidateFloat;
 	
 	// Init interface driver
 	SCCI_Init(&DEVICE_RS232_Interface, &RS232_IOConfig, &X_ServiceConfig, (pInt16U)DataTable, DATA_TABLE_SIZE,
@@ -140,6 +142,28 @@ static Boolean DEVPROFILE_Validate16(Int16U Address, Int16U Data)
 			return FALSE;
 	}
 	
+	return TRUE;
+}
+// ----------------------------------------
+
+static Boolean DEVPROFILE_ValidateFloat(Int16U Address, float Data)
+{
+	if(ENABLE_LOCKING && !UnlockedForNVWrite && (Address < DATA_TABLE_WR_START))
+		return FALSE;
+
+	if(Address < DATA_TABLE_WR_START)
+	{
+		if(Data < NVConstraint[Address - DATA_TABLE_NV_START].Min
+				|| Data > NVConstraint[Address - DATA_TABLE_NV_START].Max)
+			return FALSE;
+	}
+	else if(Address < DATA_TABLE_WP_START)
+	{
+		if(Data < VConstraint[Address - DATA_TABLE_WR_START].Min
+				|| Data > VConstraint[Address - DATA_TABLE_WR_START].Max)
+			return FALSE;
+	}
+
 	return TRUE;
 }
 // ----------------------------------------

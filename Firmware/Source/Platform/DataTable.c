@@ -15,7 +15,7 @@
 // Variables
 //
 static EPROMServiceConfig EPROMServiceCfg;
-volatile Int16U DataTable[DATA_TABLE_SIZE];
+volatile DType DataTable[DATA_TABLE_SIZE];
 
 // Functions
 //
@@ -36,14 +36,16 @@ void DT_Init(EPROMServiceConfig EPROMService, Boolean NoRestore)
 void DT_RestoreNVPartFromEPROM()
 {
 	if(EPROMServiceCfg.ReadService)
-		EPROMServiceCfg.ReadService(DT_EPROM_ADDRESS, (pInt16U)&DataTable[DATA_TABLE_NV_START], DATA_TABLE_NV_SIZE);
+		EPROMServiceCfg.ReadService(DT_EPROM_ADDRESS, (pInt16U)&DataTable[DATA_TABLE_NV_START],
+				DATA_TABLE_NV_SIZE * (sizeof(DType) / 2));
 }
 // ----------------------------------------
 
 void DT_SaveNVPartToEPROM()
 {
 	if(EPROMServiceCfg.WriteService)
-		EPROMServiceCfg.WriteService(DT_EPROM_ADDRESS, (pInt16U)&DataTable[DATA_TABLE_NV_START], DATA_TABLE_NV_SIZE);
+		EPROMServiceCfg.WriteService(DT_EPROM_ADDRESS, (pInt16U)&DataTable[DATA_TABLE_NV_START],
+				DATA_TABLE_NV_SIZE * (sizeof(DType) / 2));
 }
 // ----------------------------------------
 
