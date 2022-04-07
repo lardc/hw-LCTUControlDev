@@ -5,6 +5,7 @@
 #include "DataTable.h"
 #include "DiscreteOpAmp.h"
 #include "LowLevel.h"
+#include "Math.h"
 
 // Definitions
 #define MAF_BUFFER_LENGTH				128
@@ -13,7 +14,7 @@
 
 // Variables
 float VoltageTarget, VoltageSetpoint, RegulatorPcoef, RegulatorIcoef;
-float RegulatorAlowedError, MeasureAlowedError, dV;
+float RegulatorAlowedError, dV;
 float  Qi;
 Int16U RegulatorPulseCounter = 0;
 Int16U PulsePointsQuantity = 0;
@@ -21,6 +22,8 @@ volatile Int64U LOGIC_PowerOnCounter = 0;
 volatile Int64U LOGIC_BetweenPulsesDelay = 0;
 volatile Int64U LOGIC_TestTime = 0;
 volatile Int16U RingBufferIndex = 0;
+Int16U FollowingErrorCounter = 0;
+Int16U FollowingErrorCounterMax = 0;
 
 // Arrays
 float RingBuffer_Voltage[MAF_BUFFER_LENGTH];
@@ -50,41 +53,34 @@ void LOGIC_CacheVariables()
 	RegulatorIcoef = (float)DataTable[REG_REGULATOR_Ki] / 1000;
 	dV = VoltageSetpoint / DataTable[REG_PULSE_FRONT_WIDTH] * TIMER6_uS / 1000;
 	RegulatorAlowedError = (float)DataTable[REG_REGULATOR_ALOWED_ERR] / 10;
-	MeasureAlowedError = (float)DataTable[REG_MEASURE_ALLOWED_ERR] / 10;
+	FollowingErrorCounterMax = DataTable[REG_FOLLOWING_ERR_CNT];
 
 	LOGIC_ClearVariables();
 }
 //-----------------------------
 
-bool LOGIC_RegulatorCycle(float Voltage)
+bool LOGIC_RegulatorCycle(float Voltage, Int16U* Fault)
 {
-	float RegulatorError, Qp, RegulatorOut, ErrorX;
+	float RegulatorError, Qp, RegulatorOut;
+	bool Finished = false;
 
 	// Формирование линейно нарастающего фронта импульса напряжения
 	if(VoltageTarget < VoltageSetpoint)
 		VoltageTarget += dV;
-
-	if(VoltageTarget > VoltageSetpoint)
-	{
+	else
 		VoltageTarget = VoltageSetpoint;
-		DataTable[REG_TARGET_VOLTAGE_FLAG] = true;
-	}
 
 	RegulatorError = (RegulatorPulseCounter == 0) ? 0 : (VoltageTarget - Voltage);
 
-	ErrorX = RegulatorError / VoltageSetpoint * 100;
-	if(ErrorX < 0)
-		ErrorX = ErrorX * (-1);
-
-	if(ErrorX <= RegulatorAlowedError)
+	if(fabsf(RegulatorError) < RegulatorAlowedError)
 	{
-		if(ErrorX <= MeasureAlowedError)
-			DataTable[REG_MEASURE_ERR_FLAG] = true;
-		else
-			DataTable[REG_MEASURE_ERR_FLAG] = false;
-	}
+		Qi += RegulatorError * RegulatorIcoef;
 
-	Qi += RegulatorError * RegulatorIcoef;
+		if(FollowingErrorCounter)
+			FollowingErrorCounter--;
+	}
+	else
+		FollowingErrorCounter++;
 
 	if(Qi > DataTable[REG_REGULATOR_QI_MAX])
 		Qi = DataTable[REG_REGULATOR_QI_MAX];
@@ -102,12 +98,19 @@ bool LOGIC_RegulatorCycle(float Voltage)
 
 	LOGIC_SaveRegulatorErr(RegulatorError);
 
-	RegulatorPulseCounter++;
 
-	if(RegulatorPulseCounter >= PulsePointsQuantity)
-		return true;
+	if(FollowingErrorCounter >= FollowingErrorCounterMax)
+	{
+		*Fault = DF_FOLLOWING_ERROR;
+		Finished = true;
+	}
 	else
-		return false;
+	{
+		RegulatorPulseCounter++;
+		Finished = (RegulatorPulseCounter >= PulsePointsQuantity) ? true : false;
+	}
+
+	return Finished;
 }
 //-----------------------------
 
@@ -227,7 +230,6 @@ void LOGIC_ClearVariables()
 	RegulatorPulseCounter = 0;
 	VoltageTarget = 0;
 	LOGIC_TestTime = 0;
-
-	DataTable[REG_TARGET_VOLTAGE_FLAG] = false;
+	FollowingErrorCounter = 0;
 }
 //-----------------------------

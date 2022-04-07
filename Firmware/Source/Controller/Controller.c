@@ -195,16 +195,24 @@ void CONTROL_LogicProcess()
 void CONTROL_HighPriorityProcess()
 {
 	float Voltage;
+	Int16U Fault = 0;
 
 	if(CONTROL_SubState == SS_Pulse)
 	{
 		Voltage = MEASURE_SampleVoltage();
 		LOGIC_LoggingProcess(Voltage);
 
-		if(LOGIC_RegulatorCycle(Voltage))
+		if(LOGIC_RegulatorCycle(Voltage, &Fault))
 		{
 			CONTROL_StopProcess();
-			CONTROL_SaveTestResult();
+
+			if(Fault != DF_NONE)
+				CONTROL_SwitchToFault(Fault);
+			else
+			{
+				CONTROL_SaveTestResult();
+				CONTROL_SetDeviceState(DS_Ready, SS_None);
+			}
 		}
 	}
 }
@@ -221,8 +229,6 @@ void CONTROL_StopProcess()
 {
 	LOGIC_StopProcess();
 	CONTROL_AfterPulsePause = CONTROL_TimeCounter + DataTable[REG_AFTER_PULSE_PAUSE];
-
-	CONTROL_SetDeviceState(DS_Ready, SS_None);
 }
 //-----------------------------------------------
 
