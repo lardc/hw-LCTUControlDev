@@ -53,7 +53,6 @@ static SCCI_IOConfig RS232_IOConfig;
 static BCCI_IOConfig CAN_IOConfig;
 static xCCI_ServiceConfig X_ServiceConfig;
 static EPStates RS232_EPState, CAN_EPState;
-static Boolean UnlockedForNVWrite = FALSE;
 static xCCI_FUNC_CallbackAction ControllerDispatchFunction;
 //
 static Boolean* MaskChangesFlag;
@@ -117,65 +116,33 @@ void DEVPROFILE_ResetControlSection()
 
 static void DEVPROFILE_FillWRPartDefault()
 {
-	Int16U i;
-	
-	// Write default values to data table
-	for(i = 0; i < (DATA_TABLE_WP_START - DATA_TABLE_WR_START); ++i)
-		DataTable[DATA_TABLE_WR_START + i] = VConstraint[i].Default;
+	for(Int16U i = DATA_TABLE_WR_START; i < DATA_TABLE_WP_START; ++i)
+		DataTable[i] = Constraint[i].Default;
 }
 // ----------------------------------------
 
 void DEVPROFILE_FillNVPartDefault(void)
 {
-	Int16U i;
-	
-	// Write default values to data table
-	for(i = 0; i < DATA_TABLE_NV_SIZE; ++i)
-		DataTable[DATA_TABLE_NV_START + i] = NVConstraint[i].Default;
+	for(Int16U i = 0; i < DATA_TABLE_NV_SIZE; ++i)
+		DataTable[i] = Constraint[i].Default;
 }
 // ----------------------------------------
 
 static Boolean DEVPROFILE_Validate16(Int16U Address, Int16U Data)
 {
-	if(ENABLE_LOCKING && !UnlockedForNVWrite && (Address < DATA_TABLE_WR_START))
+	if(Address < DATA_TABLE_WP_START)
+		return (Constraint[Address].Min <= Data) && (Data <= Constraint[Address].Max);
+	else
 		return FALSE;
-	
-	if(Address < DATA_TABLE_WR_START)
-	{
-		if(Data < NVConstraint[Address - DATA_TABLE_NV_START].Min
-				|| Data > NVConstraint[Address - DATA_TABLE_NV_START].Max)
-			return FALSE;
-	}
-	else if(Address < DATA_TABLE_WP_START)
-	{
-		if(Data < VConstraint[Address - DATA_TABLE_WR_START].Min
-				|| Data > VConstraint[Address - DATA_TABLE_WR_START].Max)
-			return FALSE;
-	}
-	
-	return TRUE;
 }
 // ----------------------------------------
 
 static Boolean DEVPROFILE_ValidateFloat(Int16U Address, float Data)
 {
-	if(ENABLE_LOCKING && !UnlockedForNVWrite && (Address < DATA_TABLE_WR_START))
+	if(Address < DATA_TABLE_WP_START)
+		return (Constraint[Address].Min <= Data) && (Data <= Constraint[Address].Max);
+	else
 		return FALSE;
-
-	if(Address < DATA_TABLE_WR_START)
-	{
-		if(Data < NVConstraint[Address - DATA_TABLE_NV_START].Min
-				|| Data > NVConstraint[Address - DATA_TABLE_NV_START].Max)
-			return FALSE;
-	}
-	else if(Address < DATA_TABLE_WP_START)
-	{
-		if(Data < VConstraint[Address - DATA_TABLE_WR_START].Min
-				|| Data > VConstraint[Address - DATA_TABLE_WR_START].Max)
-			return FALSE;
-	}
-
-	return TRUE;
 }
 // ----------------------------------------
 
@@ -184,32 +151,21 @@ static Boolean DEVPROFILE_DispatchAction(Int16U ActionID, pInt16U UserError)
 	switch (ActionID)
 	{
 		case ACT_SAVE_TO_ROM:
-			{
-				if(ENABLE_LOCKING && !UnlockedForNVWrite)
-					*UserError = ERR_WRONG_PWD;
-				else
-					DT_SaveNVPartToEPROM();
-			}
+			DT_SaveNVPartToEPROM();
 			break;
+
 		case ACT_RESTORE_FROM_ROM:
-			{
-				if(ENABLE_LOCKING && !UnlockedForNVWrite)
-					*UserError = ERR_WRONG_PWD;
-				else
-					DT_RestoreNVPartFromEPROM();
-			}
+			DT_RestoreNVPartFromEPROM();
 			break;
+
 		case ACT_RESET_TO_DEFAULT:
-			{
-				if(ENABLE_LOCKING && !UnlockedForNVWrite)
-					*UserError = ERR_WRONG_PWD;
-				else
-					DT_ResetNVPart(&DEVPROFILE_FillNVPartDefault);
-			}
+			DT_ResetNVPart(&DEVPROFILE_FillNVPartDefault);
 			break;
+
 		case ACT_BOOT_LOADER_REQUEST:
 			BOOT_LOADER_VARIABLE = BOOT_LOADER_REQUEST;
 			break;
+
 		default:
 			return (ControllerDispatchFunction) ? ControllerDispatchFunction(ActionID, UserError) : FALSE;
 	}

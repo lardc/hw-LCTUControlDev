@@ -8,7 +8,6 @@
 #define EP_COUNT								3		// Количество массивов для чтения
 #define FEP_COUNT								1		// Количество массивов для чтения типа float
 #define VALUES_x_SIZE							300		// Размер массивов
-#define ENABLE_LOCKING							FALSE	// Защита NV регистров паролем
 
 // Параметры DiscreteOpAmp
 #define DISOPAMP_CURRENT_RANGE_QUANTITY			4

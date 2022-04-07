@@ -52,26 +52,12 @@
 #define REGULATOR_KI_MAX			INT16U_MAX
 #define REGULATOR_KI_DEF			0
 //
-
-
-
-
-
-
-
-
 #define NO		0
 #define YES		1
 
 #define PS_ACTIVITY_TIME_MIN		100			// мс
 #define PS_ACTIVITY_TIME_MAX		10000		// мс
 #define PS_ACTIVITY_TIME_DEF		1500		// мс
-
-
-
-
-
-
 //
 #define HW_I_CUTOFF_K_MIN			0			// (%)
 #define HW_I_CUTOFF_K_MAX			30			// (%)
@@ -98,7 +84,6 @@ typedef struct __TableItemConstraint
 } TableItemConstraint;
 
 // Variables
-extern const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE];
-extern const TableItemConstraint VConstraint[DATA_TABLE_WP_START - DATA_TABLE_WR_START];
+extern const TableItemConstraint Constraint[];
 
 #endif // __CONSTRAINTS_H
