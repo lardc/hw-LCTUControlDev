@@ -13,10 +13,6 @@
 void LL_ToggleBoardLED();
 void LL_SetStateLineSync(bool State);
 void LL_WriteDACx(Int16U Data);
-void LL_SetCurrentRange0();
-void LL_SetCurrentRange1();
-void LL_SetCurrentRange2();
-void LL_SetCurrentRange3();
 void LL_ToggleLDAC();
 
 #endif //__LOWLEVEL_H

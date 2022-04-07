@@ -19,38 +19,6 @@ void LL_SetStateLineSync(bool State)
 }
 //-----------------------------
 
-void LL_SetCurrentRange0()
-{
-	GPIO_SetState(GPIO_OPAMP_R0, false);
-	GPIO_SetState(GPIO_OPAMP_R1, false);
-	GPIO_SetState(GPIO_OPAMP_R2, false);
-}
-//-----------------------------
-
-void LL_SetCurrentRange1()
-{
-	GPIO_SetState(GPIO_OPAMP_R0, true);
-	GPIO_SetState(GPIO_OPAMP_R1, false);
-	GPIO_SetState(GPIO_OPAMP_R2, false);
-}
-//-----------------------------
-
-void LL_SetCurrentRange2()
-{
-	GPIO_SetState(GPIO_OPAMP_R0, false);
-	GPIO_SetState(GPIO_OPAMP_R1, true);
-	GPIO_SetState(GPIO_OPAMP_R2, false);
-}
-//-----------------------------
-
-void LL_SetCurrentRange3()
-{
-	GPIO_SetState(GPIO_OPAMP_R0, false);
-	GPIO_SetState(GPIO_OPAMP_R1, false);
-	GPIO_SetState(GPIO_OPAMP_R2, true);
-}
-//-----------------------------
-
 void LL_WriteDACx(Int16U Data)
 {
 	GPIO_SetState(GPIO_OPAMP_SYNC, false);

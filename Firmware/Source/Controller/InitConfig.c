@@ -21,17 +21,11 @@ void INITCFG_ConfigIO()
 	
 	// Выходы
 	GPIO_InitPushPullOutput(GPIO_LED);
-	GPIO_InitPushPullOutput(GPIO_OPAMP_R0);
-	GPIO_InitPushPullOutput(GPIO_OPAMP_R1);
-	GPIO_InitPushPullOutput(GPIO_OPAMP_R2);
 	GPIO_InitPushPullOutput(GPIO_OPAMP_SYNC);
 	GPIO_InitPushPullOutput(GPIO_OPAMP_LDAC);
 	GPIO_InitPushPullOutput(GPIO_SYNC);
 
 	// Начальная установка состояний выводов
-	GPIO_SetState(GPIO_OPAMP_R0, false);
-	GPIO_SetState(GPIO_OPAMP_R1, false);
-	GPIO_SetState(GPIO_OPAMP_R2, false);
 	GPIO_SetState(GPIO_OPAMP_SYNC, true);
 	GPIO_SetState(GPIO_OPAMP_LDAC, true);
 	GPIO_SetState(GPIO_SYNC, false);
@@ -80,8 +74,6 @@ void INITCFG_ConfigWatchDog()
 void INITCFG_ConfigADC()
 {
 	RCC_ADC_Clk_EN(ADC_12_ClkEN);
-
-	ADC1_2_SetDualMode(true);
 
 	// ADC1
 	ADC_Calibration(ADC1);

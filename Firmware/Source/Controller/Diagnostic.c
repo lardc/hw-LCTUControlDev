@@ -16,14 +16,6 @@ bool DIAG_HandleDiagnosticAction(uint16_t ActionID, uint16_t *pUserError)
 				DBGACT_GenerateImpulseToLineSync();
 			break;
 
-		case ACT_DBG_SET_CURRENT_RANGE:
-				DBGACT_SetCurrentRange(DataTable[REG_DBG]);
-			break;
-
-		case ACT_DBG_SET_CURRENT_CUTOFF:
-				DBGACT_SetCurrentCutoff(DataTable[REG_DBG]);
-			break;
-
 		case ACT_DBG_SET_VOLTAGE:
 				DBGACT_OpAmpSetVoltage(DataTable[REG_DBG]);
 			break;

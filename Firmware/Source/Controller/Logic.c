@@ -12,7 +12,7 @@
 //
 
 // Variables
-float VoltageTarget, VoltageSetpoint, CurrentCutOff, RegulatorPcoef, RegulatorIcoef;
+float VoltageTarget, VoltageSetpoint, RegulatorPcoef, RegulatorIcoef;
 float RegulatorAlowedError, MeasureAlowedError, dV;
 float  Qi;
 Int16U RegulatorPulseCounter = 0;
@@ -39,14 +39,12 @@ void LOGIC_StartPrepare()
 {
 	LOGIC_CacheVariables();
 	CU_LoadConvertParams();
-	LOGIC_SetCurrentRange();
 }
 //-----------------------------
 
 void LOGIC_CacheVariables()
 {
 	VoltageSetpoint = (float)DataTable[REG_VOLTAGE_SETPOINT] / 10;
-	CurrentCutOff = (float)((Int32U)((DataTable[REG_CURRENT_CUTOFF_H] << 16) | DataTable[REG_CURRENT_CUTOFF_L])) / 100;
 	PulsePointsQuantity = DataTable[REG_PULSE_WIDTH] * 1000 / TIMER6_uS;
 	RegulatorPcoef = (float)DataTable[REG_REGULATOR_Kp] / 1000;
 	RegulatorIcoef = (float)DataTable[REG_REGULATOR_Ki] / 1000;
@@ -70,7 +68,6 @@ bool LOGIC_RegulatorCycle(float Voltage)
 	{
 		VoltageTarget = VoltageSetpoint;
 		DataTable[REG_TARGET_VOLTAGE_FLAG] = true;
-		LOGIC_SetCurrentRange();
 	}
 
 	RegulatorError = (RegulatorPulseCounter == 0) ? 0 : (VoltageTarget - Voltage);
@@ -232,14 +229,5 @@ void LOGIC_ClearVariables()
 	LOGIC_TestTime = 0;
 
 	DataTable[REG_TARGET_VOLTAGE_FLAG] = false;
-}
-//-----------------------------
-
-void LOGIC_SetCurrentRange()
-{
-	if(DataTable[REG_TARGET_VOLTAGE_FLAG])
-		DISOPAMP_SetCurrentCutOff(CurrentCutOff);
-	else
-		DISOPAMP_SetCurrentCutOff(DISOPAMP_CURRENT_THRESHOLD_RANGE_3);
 }
 //-----------------------------

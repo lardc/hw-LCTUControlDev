@@ -15,6 +15,5 @@ void LOGIC_StartPrepare();
 void LOGIC_LoggingProcess(float Voltage);
 float LOGIC_GetAverageVoltage();
 float LOGIC_GetLastSampledVoltage();
-void LOGIC_SetCurrentRange();
 
 #endif /* LOGIC_H_ */

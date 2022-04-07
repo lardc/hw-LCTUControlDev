@@ -18,9 +18,6 @@
 
 // Определения для выходных портов
 GPIO_PortPinSettingMacro GPIO_LED				= {GPIOA, Pin_6};
-GPIO_PortPinSettingMacro GPIO_OPAMP_R0			= {GPIOB, Pin_1};
-GPIO_PortPinSettingMacro GPIO_OPAMP_R1			= {GPIOA, Pin_7};
-GPIO_PortPinSettingMacro GPIO_OPAMP_R2			= {GPIOB, Pin_0};
 GPIO_PortPinSettingMacro GPIO_OPAMP_SYNC		= {GPIOA, Pin_8};
 GPIO_PortPinSettingMacro GPIO_OPAMP_LDAC		= {GPIOB, Pin_14};
 GPIO_PortPinSettingMacro GPIO_SYNC				= {GPIOC, Pin_13};

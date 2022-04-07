@@ -8,9 +8,7 @@
 #define ACT_CLR_WARNING					4	// Очистка всех warning
 
 #define ACT_DBG_PULSE_SYNC				50	// Одиночный импульс в линию SYNC
-#define ACT_DBG_SET_CURRENT_RANGE		51	// Установка диапазона по току (0, 1, 2)
-#define ACT_DBG_SET_CURRENT_CUTOFF		52	// Установка отсечки по току на всех ячейках DiscreteOpAmp
-#define ACT_DBG_SET_VOLTAGE				53	// Установка напряжения
+#define ACT_DBG_SET_VOLTAGE				51	// Установка напряжения
 
 #define ACT_START_PROCESS				100	// Старт измерения
 #define ACT_STOP_PROCESS				101	// Стоп измерения
@@ -32,27 +30,19 @@
 #define REG_REGULATOR_QI_MAX			5	// Максимально допустимое значение Qi регулятора
 #define REG_MEASURE_ALLOWED_ERR			6	// Допустимая ошибка при измерении (% * 10)
 //
-#define REG_DAC_V_CELL_K				10	// Коэффициент грубой подстройки К
-#define REG_DAC_V_CELL_B				11	// Смещение грубой подстройки B
+#define REG_DAC_V_K						10	// Коэффициент грубой подстройки К
+#define REG_DAC_V_B						11	// Смещение грубой подстройки B
 //
-#define REG_ADC_V_RANGE0_P2				12	// Диапазон 0 - Коэффициент тонкой подстройки Р2 х1е6
-#define REG_ADC_V_RANGE0_P1				13	// Диапазон 0 - Коэффициент тонкой подстройки Р1 х1000
-#define REG_ADC_V_RANGE0_P0				14	// Диапазон 0 - Смещение тонкой подстройки Р0
-#define REG_ADC_V_RANGE0_K				15	// Диапазон 0 - Коэффициент грубой подстройки K
-#define REG_ADC_V_RANGE0_B				16	// Диапазон 0 - Смещение грубой подстройки B
+#define REG_ADC_V_P2					12	// Коэффициент тонкой подстройки Р2 х1е6
+#define REG_ADC_V_P1					13	// Коэффициент тонкой подстройки Р1 х1000
+#define REG_ADC_V_P0					14	// Смещение тонкой подстройки Р0
+#define REG_ADC_V_K						15	// Коэффициент грубой подстройки K
+#define REG_ADC_V_B						16	// Смещение грубой подстройки B
 //
-#define REG_ADC_V_RANGE1_P2				17	// Диапазон 1 - Коэффициент тонкой подстройки Р2 х1е6
-#define REG_ADC_V_RANGE1_P1				18	// Диапазон 1 - Коэффициент тонкой подстройки Р1 х1000
-#define REG_ADC_V_RANGE1_P0				19	// Диапазон 1 - Смещение тонкой подстройки Р0
-#define REG_ADC_V_RANGE1_K				20	// Диапазон 1 - Коэффициент грубой подстройки K
-#define REG_ADC_V_RANGE1_B				21	// Диапазон 1 - Смещение грубой подстройки B
-//
-#define REG_REGULATOR_Kp				22	// Пропорциональный коэффициент регулятора
-#define REG_REGULATOR_Ki				23	// Интегральный коэффициент регулятора
+#define REG_REGULATOR_Kp				17	// Пропорциональный коэффициент регулятора
+#define REG_REGULATOR_Ki				18	// Интегральный коэффициент регулятора
 
 #define REG_VOLTAGE_SETPOINT			128	// Уставка по напряжению, В х 10
-#define REG_CURRENT_CUTOFF_L			129	// Ограничение по току (старшая часть), мкА х 10
-#define REG_CURRENT_CUTOFF_H			130	// Ограничение по току (младшая часть), мкА х 10
 
 // Несохраняемы регистры чтения-записи
 #define REG_DBG							150	// Регистр режима Отладки 1
@@ -93,7 +83,6 @@
 
 //  Warning
 #define WARNING_NONE					0
-#define WARNING_CURRENT_CUTOFF			1
 
 //  User Errors
 #define ERR_NONE						0

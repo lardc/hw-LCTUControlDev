@@ -25,13 +25,13 @@ const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] = {
 		{COEF_P0_MIN, COEF_P0_MAX, COEF_P0_DEF},									// 14
 		{COEF_K_MIN, COEF_K_MAX, COEF_K_DEF},										// 15
 		{OFFSET_MIN, OFFSET_MAX, OFFSET_DEF},										// 16
-		{COEF_P2_MIN, COEF_P2_MAX, COEF_P2_DEF},									// 17
-		{COEF_P1_MIN, COEF_P1_MAX, COEF_P1_DEF},									// 18
-		{COEF_P0_MIN, COEF_P0_MAX, COEF_P0_DEF},									// 19
-		{COEF_K_MIN, COEF_K_MAX, COEF_K_DEF},										// 20
-		{OFFSET_MIN, OFFSET_MAX, OFFSET_DEF},										// 21
-		{REGULATOR_KP_MIN, REGULATOR_KP_MAX, REGULATOR_KP_DEF},						// 22
-		{REGULATOR_KI_MIN, REGULATOR_KI_MAX, REGULATOR_KI_DEF},						// 23
+		{REGULATOR_KP_MIN, REGULATOR_KP_MAX, REGULATOR_KP_DEF},						// 17
+		{REGULATOR_KI_MIN, REGULATOR_KI_MAX, REGULATOR_KI_DEF},						// 18
+		{0, 0, 0},																	// 19
+		{0, 0, 0},																	// 20
+		{0, 0, 0},																	// 21
+		{0, 0, 0},																	// 22
+		{0, 0, 0},																	// 23
 		{0, 0, 0},																	// 24
 		{0, 0, 0},																	// 25
 		{0, 0, 0},																	// 26
@@ -140,8 +140,8 @@ const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] = {
 
 const TableItemConstraint VConstraint[DATA_TABLE_WP_START - DATA_TABLE_WR_START] = {
 		{VOLTAGE_SETPOINT_MIN, VOLTAGE_SETPOINT_MAX, 0},							// 128
-		{0, INT16U_MAX, 0},															// 129
-		{0, INT16U_MAX, 0},															// 130
+		{0, 0, 0},																	// 129
+		{0, 0, 0},																	// 130
 		{0, 0, 0},																	// 131
 		{0, 0, 0},																	// 132
 		{0, 0, 0},																	// 133

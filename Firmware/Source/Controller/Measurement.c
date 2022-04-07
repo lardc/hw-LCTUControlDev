@@ -8,7 +8,6 @@
 
 // Variables
 Int16U MEASURE_ADC_VoltageRaw[ADC_DMA_BUFF_SIZE];
-Int16U MEASURE_VoltageRange = 0;
 
 // Functions prototypes
 Int16U MEASURE_DMAExtractX(Int16U* InputArray, Int16U ArraySize);
@@ -21,7 +20,7 @@ float MEASURE_SampleVoltage()
 {
 	float Voltage;
 
-	Voltage = CU_ADCtoV(MEASURE_DMAExtractVoltage(), MEASURE_VoltageRange);
+	Voltage = CU_ADCtoV(MEASURE_DMAExtractVoltage());
 	MEASURE_StartNewSampling();
 
 	return Voltage;
