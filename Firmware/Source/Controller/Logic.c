@@ -47,7 +47,7 @@ void LOGIC_StartPrepare()
 
 void LOGIC_CacheVariables()
 {
-	VoltageSetpoint = (float)DataTable[REG_VOLTAGE_SETPOINT] / 10;
+	VoltageSetpoint = DataTable[REG_VOLTAGE_SETPOINT];
 	PulsePointsQuantity = DataTable[REG_PULSE_WIDTH] * 1000 / TIMER6_uS;
 	RegulatorPcoef = (float)DataTable[REG_REGULATOR_Kp] / 1000;
 	RegulatorIcoef = (float)DataTable[REG_REGULATOR_Ki] / 1000;

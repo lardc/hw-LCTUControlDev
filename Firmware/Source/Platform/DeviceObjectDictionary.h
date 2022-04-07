@@ -42,7 +42,7 @@
 #define REG_REGULATOR_Kp				17	// Пропорциональный коэффициент регулятора
 #define REG_REGULATOR_Ki				18	// Интегральный коэффициент регулятора
 
-#define REG_VOLTAGE_SETPOINT			128	// Уставка по напряжению, В х 10
+#define REG_VOLTAGE_SETPOINT			128	// Уставка по напряжению, В
 
 // Несохраняемы регистры чтения-записи
 #define REG_DBG							150	// Регистр режима Отладки 1

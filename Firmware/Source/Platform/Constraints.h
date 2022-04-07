@@ -63,8 +63,8 @@
 #define PS_ACTIVITY_TIME_MAX		10000		// мс
 #define PS_ACTIVITY_TIME_DEF		1500		// мс
 //
-#define VOLTAGE_SETPOINT_MIN		250			// (В * 10)
-#define VOLTAGE_SETPOINT_MAX		20000		// (В * 10)
+#define VOLTAGE_SETPOINT_MIN		100			// В
+#define VOLTAGE_SETPOINT_MAX		1500		// В
 
 // Types
 typedef struct __TableItemConstraint
