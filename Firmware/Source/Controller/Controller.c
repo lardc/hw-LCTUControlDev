@@ -31,8 +31,8 @@ volatile Int16U CONTROL_RegulatorErr_Counter = 0;
 volatile Int16U CONTROL_ValuesVoltage[VALUES_x_SIZE];
 volatile Int16U CONTROL_RegulatorErr[VALUES_x_SIZE];
 
-volatile float CONTROL_FloatEP[VALUES_x_SIZE] = {1.4, 2.1, 1.75, 3.1415};
-volatile Int16U CONTROL_FloatEP_Counter = 4;
+volatile float CONTROL_FloatEP[VALUES_x_SIZE];
+volatile Int16U CONTROL_FloatEP_Counter = 0;
 
 // Forward functions
 //
@@ -73,9 +73,15 @@ void CONTROL_Init()
 	DEVPROFILE_Init(&CONTROL_DispatchAction, &CycleActive);
 	DEVPROFILE_InitEPService(EPIndexes, EPSized, EPCounters, EPDatas);
 	DEVPROFILE_InitFEPService(FEPIndexes, FEPSized, FEPCounters, FEPDatas);
+
 	// Сброс значений
 	DEVPROFILE_ResetControlSection();
 	CONTROL_ResetToDefaultState();
+
+	CONTROL_FloatEP_Counter = 3;
+	CONTROL_FloatEP[0] = 1.11;
+	CONTROL_FloatEP[1] = 2.22;
+	CONTROL_FloatEP[2] = 3.33;
 }
 //------------------------------------------
 

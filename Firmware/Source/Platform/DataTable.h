@@ -42,13 +42,6 @@
 
 // Types
 //
-#ifdef USE_FLOAT_DT
-typedef float	DType;
-typedef float*	pDType;
-#else
-typedef Int16U	DType;
-typedef pInt16U	pDType;
-#endif
 typedef void (*FUNC_SetDefaultValues)();
 typedef void (*FUNC_EPROM_WriteValues)(Int32U EPROMAddress, pInt16U Buffer, Int16U BufferSize);
 typedef void (*FUNC_EPROM_ReadValues)(Int32U EPROMAddress, pInt16U Buffer, Int16U BufferSize);
@@ -61,7 +54,7 @@ typedef struct __EPROMServiceConfig
 
 // Variables
 //
-extern volatile DType DataTable[];
+extern volatile float DataTable[];
 
 // Functions
 //

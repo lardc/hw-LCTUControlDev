@@ -92,9 +92,9 @@
 // Types
 typedef struct __TableItemConstraint
 {
-	DType Min;
-	DType Max;
-	DType Default;
+	float Min;
+	float Max;
+	float Default;
 } TableItemConstraint;
 
 // Variables

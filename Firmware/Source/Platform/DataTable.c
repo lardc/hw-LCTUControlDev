@@ -15,7 +15,7 @@
 // Variables
 //
 static EPROMServiceConfig EPROMServiceCfg;
-volatile DType DataTable[DATA_TABLE_SIZE];
+volatile float DataTable[DATA_TABLE_SIZE];
 
 // Functions
 //
