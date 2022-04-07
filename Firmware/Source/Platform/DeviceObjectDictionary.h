@@ -22,13 +22,12 @@
 
 // Регистры
 // Сохраняемые регистры
-#define REG_PULSE_WIDTH					0	// Длительность импульса (мс)
-#define REG_PULSE_FRONT_WIDTH			1	// Длительность фронта импульса в (мс)
-#define REG_REGULATOR_ALOWED_ERR		2	// Допустимая ошибка регулирования (% * 10)
-#define REG_SCOPE_STEP					3	// Сохранение измеренных данных с заданным шагом
-#define REG_AFTER_PULSE_PAUSE			4	// Время выдержки перед началом следующего измерения (мс)
-#define REG_REGULATOR_QI_MAX			5	// Максимально допустимое значение Qi регулятора
-#define REG_FOLLOWING_ERR_CNT			6	// Счетчик выставления ошибки FollowingError
+#define REG_PULSE_FRONT_WIDTH			0	// Длительность фронта импульса в (мс)
+#define REG_REGULATOR_ALOWED_ERR		1	// Допустимая ошибка регулирования (% * 10)
+#define REG_SCOPE_STEP					2	// Сохранение измеренных данных с заданным шагом
+#define REG_AFTER_PULSE_PAUSE			3	// Время выдержки перед началом следующего измерения (мс)
+#define REG_REGULATOR_QI_MAX			4	// Максимально допустимое значение Qi регулятора
+#define REG_FOLLOWING_ERR_CNT			5	// Счетчик выставления ошибки FollowingError
 //
 #define REG_DAC_V_K						10	// Коэффициент грубой подстройки К
 #define REG_DAC_V_B						11	// Смещение грубой подстройки B
@@ -43,6 +42,7 @@
 #define REG_REGULATOR_Ki				18	// Интегральный коэффициент регулятора
 
 #define REG_VOLTAGE_SETPOINT			128	// Уставка по напряжению, В
+#define REG_PULSE_WIDTH					129	// Длительность импульса напряжения, мс
 
 // Несохраняемы регистры чтения-записи
 #define REG_DBG							150	// Регистр режима Отладки 1

@@ -9,8 +9,8 @@
 //Definitions
 //
 #define PULSE_WIDTH_MIN				1			// (мс)
-#define PULSE_WIDTH_MAX				200			// (мс)
-#define PULSE_WIDTH_DEF				100			// (мс)
+#define PULSE_WIDTH_MAX				100			// (мс)
+#define PULSE_WIDTH_DEF				20			// (мс)
 //
 #define FRONT_WIDTH_MIN				1			// (мс)
 #define FRONT_WIDTH_MAX				200			// (мс)

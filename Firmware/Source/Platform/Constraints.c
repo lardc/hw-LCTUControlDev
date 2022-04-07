@@ -8,13 +8,13 @@
 // Constants
 //
 const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] = {
-		{PULSE_WIDTH_MIN, PULSE_WIDTH_MAX, PULSE_WIDTH_DEF},						// 0
-		{FRONT_WIDTH_MIN, FRONT_WIDTH_MAX, FRONT_WIDTH_DEF},						// 1
-		{ALOWED_ERROR_MIN, ALOWED_ERROR_MAX, ALOWED_ERROR_DEF},						// 2
-		{0, INT16U_MAX, 0},															// 3
-		{AFTER_PULSE_PAUSE_MIN, AFTER_PULSE_PAUSE_MAX, AFTER_PULSE_PAUSE_DEF},		// 4
-		{0, INT16U_MAX, 0},															// 5
-		{FOLLOWING_ERR_CNT_MIN, FOLLOWING_ERR_CNT_MAX, FOLLOWING_ERR_CNT_DEF},		// 6
+		{FRONT_WIDTH_MIN, FRONT_WIDTH_MAX, FRONT_WIDTH_DEF},						// 0
+		{ALOWED_ERROR_MIN, ALOWED_ERROR_MAX, ALOWED_ERROR_DEF},						// 1
+		{0, INT16U_MAX, 0},															// 2
+		{AFTER_PULSE_PAUSE_MIN, AFTER_PULSE_PAUSE_MAX, AFTER_PULSE_PAUSE_DEF},		// 3
+		{0, INT16U_MAX, 0},															// 4
+		{FOLLOWING_ERR_CNT_MIN, FOLLOWING_ERR_CNT_MAX, FOLLOWING_ERR_CNT_DEF},		// 5
+		{0, 0, 0},																	// 6
 		{0, 0, 0},																	// 7
 		{0, 0, 0},																	// 8
 		{0, 0, 0},																	// 9
@@ -140,7 +140,7 @@ const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] = {
 
 const TableItemConstraint VConstraint[DATA_TABLE_WP_START - DATA_TABLE_WR_START] = {
 		{VOLTAGE_SETPOINT_MIN, VOLTAGE_SETPOINT_MAX, 0},							// 128
-		{0, 0, 0},																	// 129
+		{PULSE_WIDTH_MIN, PULSE_WIDTH_MAX, PULSE_WIDTH_DEF},						// 129
 		{0, 0, 0},																	// 130
 		{0, 0, 0},																	// 131
 		{0, 0, 0},																	// 132
