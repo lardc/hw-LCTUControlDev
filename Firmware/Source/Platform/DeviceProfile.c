@@ -1,4 +1,4 @@
-﻿// -----------------------------------------
+﻿// ----------------------------------------
 // Device profile
 // ----------------------------------------
 
@@ -223,6 +223,7 @@ void DEVPROFILE_InitFEPService(pInt16U Indexes, pInt16U Sizes, pInt16U* Counters
 		CAN_EPState.FEPs[i].LastReadCounter = 0;
 
 		SCCI_RegisterReadEndpointFloat(&DEVICE_RS232_Interface, Indexes[i], &DEVPROFILE_CallbackReadFastFloatX);
+		BCCI_RegisterReadEndpointFloat(&DEVICE_CAN_Interface, Indexes[i], &DEVPROFILE_CallbackReadFastFloatX);
 	}
 }
 // ----------------------------------------
@@ -265,7 +266,7 @@ Int16U DEVPROFILE_CallbackReadX(Int16U Endpoint, pInt16U* Buffer, Boolean Stream
 }
 // ----------------------------------------
 
-Int16U DEVPROFILE_CallbackReadFastFloatX(Int16U Endpoint, float** Buffer, void* EPStateAddress)
+Int16U DEVPROFILE_CallbackReadFastFloatX(Int16U Endpoint, float** Buffer, void* EPStateAddress, Int16U MaxNonStreamSize)
 {
 	// Validate pointer
 	if(!EPStateAddress)
@@ -281,6 +282,9 @@ Int16U DEVPROFILE_CallbackReadFastFloatX(Int16U Endpoint, float** Buffer, void* 
 	Int16U pLen = 0;
 	if(*(epState->pDataCounter) > epState->ReadCounter)
 		pLen = *(epState->pDataCounter) - epState->ReadCounter;
+
+	if(MaxNonStreamSize)
+		pLen = (pLen > MaxNonStreamSize) ? MaxNonStreamSize : pLen;
 
 	// Update content state
 	epState->LastReadCounter = epState->ReadCounter;

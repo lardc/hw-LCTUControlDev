@@ -1,4 +1,4 @@
-﻿// -----------------------------------------
+﻿// ----------------------------------------
 // Device profile
 // ----------------------------------------
 
@@ -33,7 +33,7 @@ void DEVPROFILE_UpdateCANDiagStatus();
 //
 Int16U DEVPROFILE_CallbackReadX(Int16U Endpoint, pInt16U *Buffer, Boolean Streamed, Boolean RepeatLastTransmission,
 		void *EPStateAddress, Int16U MaxNonStreamSize);
-Int16U DEVPROFILE_CallbackReadFastFloatX(Int16U Endpoint, float** Buffer, void* EPStateAddress);
+Int16U DEVPROFILE_CallbackReadFastFloatX(Int16U Endpoint, float** Buffer, void* EPStateAddress, Int16U MaxNonStreamSize);
 
 void DEVPROFILE_ResetEPReadState();
 void DEVPROFILE_ResetScopes(Int16U ResetPosition);
