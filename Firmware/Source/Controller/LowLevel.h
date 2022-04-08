@@ -11,6 +11,7 @@
 // Functions
 //
 void LL_ToggleBoardLED();
+void LL_PowerSupply(bool State);
 void LL_SetStateLineSync(bool State);
 void LL_WriteDACx(Int16U Data);
 void LL_ToggleLDAC();

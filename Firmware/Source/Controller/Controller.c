@@ -220,6 +220,7 @@ void CONTROL_HighPriorityProcess()
 
 void CONTROL_StartProcess()
 {
+	LL_PowerSupply(false);
 	MEASURE_DMABuffersClear();
 	TIM_Start(TIM6);
 }
@@ -229,6 +230,8 @@ void CONTROL_StopProcess()
 {
 	LOGIC_StopProcess();
 	CONTROL_AfterPulsePause = CONTROL_TimeCounter + DataTable[REG_AFTER_PULSE_PAUSE];
+
+	LL_PowerSupply(true);
 }
 //-----------------------------------------------
 

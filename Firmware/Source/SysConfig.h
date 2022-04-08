@@ -34,7 +34,7 @@
 
 // ADC
 #define DMA_ADC_DUT_U_CHANNEL			DMA1_Channel1	// Канал DMA для АЦП тока
-#define ADC1_VOLTAGE_CHANNEL			0				// АЦП1 номер канала напряжения
+#define ADC1_VOLTAGE_CHANNEL			1				// АЦП1 номер канала напряжения
 #define ADC_DMA_BUFF_SIZE				5				// Количество данных для DMA
 // ----------------------------------------------
 

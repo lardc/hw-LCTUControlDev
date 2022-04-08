@@ -13,8 +13,8 @@
 #define PULSE_WIDTH_DEF				20			// (мс)
 //
 #define FRONT_WIDTH_MIN				1			// (мс)
-#define FRONT_WIDTH_MAX				200			// (мс)
-#define FRONT_WIDTH_DEF				30			// (мс)
+#define FRONT_WIDTH_MAX				10			// (мс)
+#define FRONT_WIDTH_DEF				5			// (мс)
 //
 #define ALOWED_ERROR_MIN			0			// (% * 10)
 #define ALOWED_ERROR_MAX			1000		// (% * 10)
@@ -50,7 +50,7 @@
 //
 #define REGULATOR_KP_MIN			0
 #define REGULATOR_KP_MAX			INT16U_MAX
-#define REGULATOR_KP_DEF			1000
+#define REGULATOR_KP_DEF			0
 //
 #define REGULATOR_KI_MIN			0
 #define REGULATOR_KI_MAX			INT16U_MAX
@@ -64,7 +64,7 @@
 #define PS_ACTIVITY_TIME_DEF		1500		// мс
 //
 #define VOLTAGE_SETPOINT_MIN		100			// В
-#define VOLTAGE_SETPOINT_MAX		1500		// В
+#define VOLTAGE_SETPOINT_MAX		4095		// В
 
 // Types
 typedef struct __TableItemConstraint

@@ -13,6 +13,12 @@ void LL_ToggleBoardLED()
 }
 //-----------------------------
 
+void LL_PowerSupply(bool State)
+{
+	GPIO_SetState(GPIO_PS_EN, !State);
+}
+//-----------------------------
+
 void LL_SetStateLineSync(bool State)
 {
 	GPIO_SetState(GPIO_SYNC, State);

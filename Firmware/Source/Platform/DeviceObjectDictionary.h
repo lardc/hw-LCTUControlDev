@@ -9,6 +9,7 @@
 
 #define ACT_DBG_PULSE_SYNC				50	// Одиночный импульс в линию SYNC
 #define ACT_DBG_SET_VOLTAGE				51	// Установка напряжения
+#define ACT_DBG_POWER_SUPPLY			52	// Управление источниками напряжения
 
 #define ACT_START_PROCESS				100	// Старт измерения
 #define ACT_STOP_PROCESS				101	// Стоп измерения
@@ -28,6 +29,7 @@
 #define REG_AFTER_PULSE_PAUSE			3	// Время выдержки перед началом следующего измерения (мс)
 #define REG_REGULATOR_QI_MAX			4	// Максимально допустимое значение Qi регулятора
 #define REG_FOLLOWING_ERR_CNT			5	// Счетчик выставления ошибки FollowingError
+#define REG_FOLLOWING_ERR_MUTE			6	// Выключение слежения за ошибкой FollowingError
 //
 #define REG_DAC_V_K						10	// Коэффициент грубой подстройки К
 #define REG_DAC_V_B						11	// Смещение грубой подстройки B
@@ -45,8 +47,7 @@
 #define REG_PULSE_WIDTH					129	// Длительность импульса напряжения, мс
 
 // Несохраняемы регистры чтения-записи
-#define REG_DBG							150	// Регистр режима Отладки 1
-#define REG_DBG_CELL_NUM				151	// Регистр режима Отладки 2
+#define REG_DBG							150	// Отладочный регистр
 
 // Регистры только чтение
 #define REG_DEV_STATE					192	// Регистр состояния

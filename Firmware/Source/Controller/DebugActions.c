@@ -24,3 +24,9 @@ void DBGACT_OpAmpSetVoltage(uint16_t Data)
 	LL_WriteDACx(Data | DAC_CHANNEL_B);
 }
 //-----------------------------
+
+void DBGACT_PowerSupplyControl(bool State)
+{
+	LL_PowerSupply(State);
+}
+//-----------------------------

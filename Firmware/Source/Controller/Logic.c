@@ -91,15 +91,15 @@ bool LOGIC_RegulatorCycle(float Voltage, Int16U* Fault)
 	Qp = RegulatorError * RegulatorPcoef;
 	RegulatorOut = VoltageTarget + Qp +Qi;
 
-	if(RegulatorOut > DSIOPAMP_STACK_VOLTAGE_MAX)
-		RegulatorOut = DSIOPAMP_STACK_VOLTAGE_MAX;
+	//if(RegulatorOut > DSIOPAMP_STACK_VOLTAGE_MAX)
+	//	RegulatorOut = DSIOPAMP_STACK_VOLTAGE_MAX;
 
 	DISOPAMP_SetVoltage(RegulatorOut);
 
 	LOGIC_SaveRegulatorErr(RegulatorError);
 
 
-	if(FollowingErrorCounter >= FollowingErrorCounterMax)
+	if(!DataTable[REG_FOLLOWING_ERR_MUTE] && FollowingErrorCounter >= FollowingErrorCounterMax)
 	{
 		*Fault = DF_FOLLOWING_ERROR;
 		Finished = true;
