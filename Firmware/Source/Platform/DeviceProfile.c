@@ -60,7 +60,7 @@ static Boolean* MaskChangesFlag;
 // Forward functions
 //
 static Boolean DEVPROFILE_Validate16(Int16U Address, Int16U Data);
-static Boolean DEVPROFILE_ValidateFloat(Int16U Address, float Data);
+static Boolean DEVPROFILE_ValidateFloat(Int16U Address, float Data, float* LowLimit, float* HighLimit);
 static Boolean DEVPROFILE_DispatchAction(Int16U ActionID, pInt16U UserError);
 static void DEVPROFILE_FillWRPartDefault();
 
@@ -137,9 +137,16 @@ static Boolean DEVPROFILE_Validate16(Int16U Address, Int16U Data)
 }
 // ----------------------------------------
 
-static Boolean DEVPROFILE_ValidateFloat(Int16U Address, float Data)
+static Boolean DEVPROFILE_ValidateFloat(Int16U Address, float Data, float* LowLimit, float* HighLimit)
 {
-	if(Address < DATA_TABLE_WP_START)
+	if(LowLimit && HighLimit)
+	{
+		*LowLimit = Constraint[Address].Min;
+		*HighLimit = Constraint[Address].Max;
+
+		return TRUE;
+	}
+	else if(Address < DATA_TABLE_WP_START)
 		return (Constraint[Address].Min <= Data) && (Data <= Constraint[Address].Max);
 	else
 		return FALSE;
