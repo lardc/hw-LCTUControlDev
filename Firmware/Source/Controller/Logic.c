@@ -74,13 +74,13 @@ bool LOGIC_RegulatorCycle(float Voltage, Int16U* Fault)
 
 	if(fabsf(RegulatorError) < RegulatorAlowedError)
 	{
-		Qi += RegulatorError * RegulatorIcoef;
-
 		if(FollowingErrorCounter)
 			FollowingErrorCounter--;
 	}
 	else
 		FollowingErrorCounter++;
+
+	Qi += RegulatorError * RegulatorIcoef;
 
 	if(Qi > DataTable[REG_REGULATOR_QI_MAX])
 		Qi = DataTable[REG_REGULATOR_QI_MAX];
@@ -91,8 +91,8 @@ bool LOGIC_RegulatorCycle(float Voltage, Int16U* Fault)
 	Qp = RegulatorError * RegulatorPcoef;
 	RegulatorOut = VoltageTarget + Qp +Qi;
 
-	//if(RegulatorOut > DSIOPAMP_STACK_VOLTAGE_MAX)
-	//	RegulatorOut = DSIOPAMP_STACK_VOLTAGE_MAX;
+	if(RegulatorOut > DSIOPAMP_STACK_VOLTAGE_MAX)
+		RegulatorOut = DSIOPAMP_STACK_VOLTAGE_MAX;
 
 	DISOPAMP_SetVoltage(RegulatorOut);
 
