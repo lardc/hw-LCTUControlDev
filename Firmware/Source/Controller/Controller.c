@@ -14,6 +14,10 @@
 #include "BCCIxParams.h"
 #include "DiscreteOpAmp.h"
 
+// Definitions
+//
+#define POWER_SUPPLY_DELAY			50	// ms
+
 // Types
 //
 typedef void (*FUNC_AsyncDelegate)();
@@ -26,6 +30,7 @@ static Boolean CycleActive = false;
 //
 volatile Int64U CONTROL_TimeCounter = 0;
 volatile Int64U	CONTROL_AfterPulsePause = 0;
+volatile Int64U	CONTROL_PowerSupplyDelay = 0;
 volatile Int16U CONTROL_Values_Counter = 0;
 volatile Int16U CONTROL_RegulatorErr_Counter = 0;
 volatile Int16U CONTROL_ValuesVoltage[VALUES_x_SIZE];
@@ -46,6 +51,7 @@ void CONTROL_StartProcess();
 void CONTROL_ResetOutputRegisters();
 void CONTROL_SaveTestResult();
 void CONTROL_ClearTestResult();
+bool CONTROL_PowerSupplyWaiting();
 
 // Functions
 //
@@ -112,7 +118,10 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 	{
 		case ACT_ENABLE_POWER:
 			if(CONTROL_State == DS_None)
+			{
+				LL_PowerSupply(true);
 				CONTROL_SetDeviceState(DS_Ready, SS_None);
+			}
 			else if(CONTROL_State != DS_Ready)
 				*pUserError = ERR_OPERATION_BLOCKED;
 			break;
@@ -120,6 +129,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 		case ACT_DISABLE_POWER:
 			if(CONTROL_State == DS_Ready)
 			{
+				LL_PowerSupply(false);
 				LOGIC_StopProcess();
 				CONTROL_SetDeviceState(DS_None, SS_None);
 			}
@@ -132,6 +142,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			{
 				CONTROL_ResetOutputRegisters();
 				LOGIC_StartPrepare();
+
 				CONTROL_SetDeviceState(DS_InProcess, SS_WaitAfterPulse);
 			}
 			else
@@ -177,18 +188,50 @@ void CONTROL_LogicProcess()
 		{
 			case SS_WaitAfterPulse:
 				if(CONTROL_TimeCounter > CONTROL_AfterPulsePause)
-					CONTROL_SetDeviceState(DS_InProcess, SS_ExecutePulse);
+					CONTROL_SetDeviceState(DS_InProcess, SS_PowerSupplyOff);
 				break;
 
-			case SS_ExecutePulse:
+			case SS_PowerSupplyOff:
+				if(CONTROL_PowerSupplyWaiting())
+					CONTROL_SetDeviceState(DS_InProcess, SS_StartPulse);
+				else
+					LL_PowerSupply(false);
+				break;
+
+			case SS_StartPulse:
 				CONTROL_SetDeviceState(DS_InProcess, SS_Pulse);
 				CONTROL_StartProcess();
+				break;
+
+			case SS_PowerSupplyOn:
+				if(CONTROL_PowerSupplyWaiting())
+				{
+					LL_PowerSupply(true);
+					CONTROL_SetDeviceState(DS_Ready, SS_None);
+				}
 				break;
 
 			default:
 				break;
 		}
 	}
+}
+//-----------------------------------------------
+
+bool CONTROL_PowerSupplyWaiting()
+{
+	if(!CONTROL_PowerSupplyDelay)
+		CONTROL_PowerSupplyDelay = CONTROL_TimeCounter + POWER_SUPPLY_DELAY;
+	else
+	{
+		if(CONTROL_TimeCounter >= CONTROL_PowerSupplyDelay)
+		{
+			CONTROL_PowerSupplyDelay = 0;
+			return 1;
+		}
+	}
+
+	return 0;
 }
 //-----------------------------------------------
 
@@ -211,7 +254,7 @@ void CONTROL_HighPriorityProcess()
 			else
 			{
 				CONTROL_SaveTestResult();
-				CONTROL_SetDeviceState(DS_Ready, SS_None);
+				CONTROL_SetDeviceState(DS_InProcess, SS_PowerSupplyOn);
 			}
 		}
 	}
@@ -220,7 +263,7 @@ void CONTROL_HighPriorityProcess()
 
 void CONTROL_StartProcess()
 {
-	LL_PowerSupply(false);
+	LL_SetStateLineSync(true);
 	MEASURE_DMABuffersClear();
 	TIM_Start(TIM6);
 }
@@ -228,10 +271,9 @@ void CONTROL_StartProcess()
 
 void CONTROL_StopProcess()
 {
+	LL_SetStateLineSync(false);
 	LOGIC_StopProcess();
 	CONTROL_AfterPulsePause = CONTROL_TimeCounter + DataTable[REG_AFTER_PULSE_PAUSE];
-
-	LL_PowerSupply(true);
 }
 //-----------------------------------------------
 
