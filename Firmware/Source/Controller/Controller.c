@@ -263,7 +263,6 @@ void CONTROL_HighPriorityProcess()
 
 void CONTROL_StartProcess()
 {
-	LL_SetStateLineSync(true);
 	MEASURE_DMABuffersClear();
 	TIM_Start(TIM6);
 }
@@ -271,7 +270,7 @@ void CONTROL_StartProcess()
 
 void CONTROL_StopProcess()
 {
-	LL_SetStateLineSync(false);
+	LL_SetStateLineSync(true);
 	LOGIC_StopProcess();
 	CONTROL_AfterPulsePause = CONTROL_TimeCounter + DataTable[REG_AFTER_PULSE_PAUSE];
 }
