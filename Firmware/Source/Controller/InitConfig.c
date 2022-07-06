@@ -25,12 +25,21 @@ void INITCFG_ConfigIO()
 	GPIO_InitPushPullOutput(GPIO_OPAMP_LDAC);
 	GPIO_InitPushPullOutput(GPIO_SYNC);
 	GPIO_InitPushPullOutput(GPIO_PS_EN);
+	//
+	GPIO_InitPushPullOutput(GPIO_R1);
+	GPIO_InitPushPullOutput(GPIO_R2);
 
 	// Начальная установка состояний выводов
 	GPIO_SetState(GPIO_OPAMP_SYNC, true);
 	GPIO_SetState(GPIO_OPAMP_LDAC, true);
 	GPIO_SetState(GPIO_SYNC, false);
 	GPIO_SetState(GPIO_PS_EN, true);
+	//
+	GPIO_SetState(GPIO_R1, true);
+	GPIO_SetState(GPIO_R2, false);
+
+	// Входы
+	GPIO_InitInput(GPIO_R0, NoPull);
 
 
 	// Альтернативные функции

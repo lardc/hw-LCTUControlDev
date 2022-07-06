@@ -24,6 +24,10 @@ bool DIAG_HandleDiagnosticAction(uint16_t ActionID, uint16_t *pUserError)
 			DBGACT_PowerSupplyControl(DataTable[REG_DBG]);
 			break;
 
+		case 10:
+			DataTable[150] = LL_ReadSensingBoard();
+			break;
+
 		default:
 			return false;
 	}

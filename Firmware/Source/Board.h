@@ -22,6 +22,10 @@ GPIO_PortPinSettingMacro GPIO_OPAMP_SYNC		= {GPIOA, Pin_8};
 GPIO_PortPinSettingMacro GPIO_OPAMP_LDAC		= {GPIOB, Pin_14};
 GPIO_PortPinSettingMacro GPIO_SYNC				= {GPIOC, Pin_13};
 GPIO_PortPinSettingMacro GPIO_PS_EN				= {GPIOB, Pin_1};
+//
+GPIO_PortPinSettingMacro GPIO_R0				= {GPIOB, Pin_1};
+GPIO_PortPinSettingMacro GPIO_R1				= {GPIOA, Pin_7};
+GPIO_PortPinSettingMacro GPIO_R2				= {GPIOB, Pin_0};
 
 // Определения для портов альтернативных функций
 GPIO_PortPinSettingMacro GPIO_ALT_UART1_TX		= {GPIOA, Pin_9};

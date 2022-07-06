@@ -42,3 +42,26 @@ void LL_ToggleLDAC()
 	GPIO_SetState(GPIO_OPAMP_LDAC, true);
 }
 //---------------------
+
+uint16_t LL_ReadSensingBoard()
+{
+	uint16_t Data = 0;
+
+	GPIO_SetState(GPIO_R1, false);
+
+	for (int i = 0; i < 22; i++)
+	{
+		if(i > 5)
+		{
+			Data = Data << 1;
+			Data |= GPIO_GetState(GPIO_R0);
+		}
+
+		GPIO_SetState(GPIO_R2, true);
+		GPIO_SetState(GPIO_R2, false);
+	}
+
+	GPIO_SetState(GPIO_R1, true);
+
+	return Data;
+}
